@@ -11,5 +11,6 @@ data class StockHistory(
     val date: String,    // 交易日期 (可使用 String 或 Date)
     val openPrice: Double,  // 開盤價
     val closePrice: Double, // 收盤價
-    val volume: Int        // 交易量
+    val volume: Int,        // 交易量
+    val stockHistoryDataListJson: String // JSON 格式的歷史數據
 )

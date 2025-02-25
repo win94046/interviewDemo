@@ -3,7 +3,10 @@ package com.test.demo.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.test.demo.data.StockHistory
+import com.test.demo.data.StockHistoryData
+import com.test.demo.data.StockHistoryDataListJson
 import com.test.demo.data.StockRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -23,15 +26,28 @@ class StockViewModel @Inject constructor (private val repository: StockRepositor
             repository.getStockCount().collect { count ->
                 if (count == 0) { // 只有當數據庫沒有數據時才插入
                     val stocks = List(50) {
+                        // 生成隨機交易數據
+                        val historyDataList = List((5..15).random()) { // 每個股票 5~15 筆歷史記錄
+                            StockHistoryData(
+                                time = "${(9..16).random()}:${(0..59).random().toString().padStart(2, '0')}:${(0..59).random().toString().padStart(2, '0')}",
+                                price = (100..500).random().toDouble()
+                            )
+                        }
+
+                        // 轉換為 JSON 字串
+                        val historyDataJson = Gson().toJson(StockHistoryDataListJson(historyDataList))
+
+                        // 創建 StockHistory 物件
                         StockHistory(
                             symbol = listOf("AAPL", "TSLA", "GOOGL", "AMZN", "MSFT").random(),
                             date = "2024-02-${(1..28).random()}",
                             openPrice = (100..500).random().toDouble(),
                             closePrice = (100..500).random().toDouble(),
-                            volume = (1000..10000).random()
+                            volume = (1000..10000).random(),
+                            stockHistoryDataListJson = historyDataJson // 存入 JSON 格式的歷史數據
                         )
                     }
-                    repository.insertAll(stocks)
+                    repository.insertAll(stocks) // 批量插入 50 筆
                 }
             }
         }
