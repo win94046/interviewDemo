@@ -1,5 +1,6 @@
 package com.test.demo.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,8 +35,9 @@ import com.test.demo.data.StockHistoryDataListJson
 class StockDetailScreen(private val stock: StockHistory) : Screen {
     @Composable
     override fun Content() {
+        Log.i("test", "StockDetailScreen Created")
         val navigator = LocalNavigator.currentOrThrow // 取得 Voyager Navigator
-
+        Log.i("test", "Navigator is available in StockDetailScreen")
         // 解析 JSON 轉換為 List<StockHistoryData>
         val historyDataList = remember(stock.stockHistoryDataListJson) {
             val type = TypeToken.getParameterized(StockHistoryDataListJson::class.java).type
@@ -96,7 +98,6 @@ class StockDetailScreen(private val stock: StockHistory) : Screen {
             Spacer(modifier = Modifier.height(16.dp))
 
             // 繪製簡易 K 線圖
-            Text("成交價格走勢", style = MaterialTheme.typography.headlineSmall)
             KLineChart(historyDataList)
         }
     }
@@ -124,11 +125,11 @@ class StockDetailScreen(private val stock: StockHistory) : Screen {
 
 @Composable
 fun KLineChart(historyData: List<StockHistoryData>) {
+    Text("成交價格走勢", style = MaterialTheme.typography.headlineSmall)
     if (historyData.isEmpty()) {
         Text("❌ 沒有數據可顯示", color = Color.Red)
         return
     }
-
     // 排序時間，確保 K 線圖時間順序正確
     val sortedData = historyData.sortedBy { it.time }
 

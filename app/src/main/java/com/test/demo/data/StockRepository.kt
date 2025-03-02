@@ -3,32 +3,32 @@ package com.test.demo.data
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class StockRepository @Inject constructor(private val stockDao: StockDao) {
-    val allStocks: Flow<List<StockHistory>> = stockDao.getAllStocks()
+open class StockRepository @Inject constructor(protected open val stockDao: StockDao) {
+    open val allStocks: Flow<List<StockHistory>> = stockDao.getAllStocks()
 
-    suspend fun insert(stock: StockHistory) {
+    open suspend fun insert(stock: StockHistory) {
         stockDao.insertStock(stock)
     }
-    suspend fun insertAll(stocks: List<StockHistory>) {
+    open suspend fun insertAll(stocks: List<StockHistory>) {
         stockDao.insertAll(stocks)
     }
 
-    suspend fun update(stock: StockHistory) {
+    open suspend fun update(stock: StockHistory) {
         stockDao.updateStock(stock)
     }
 
-    suspend fun delete(stock: StockHistory) {
+    open suspend fun delete(stock: StockHistory) {
         stockDao.deleteStock(stock)
     }
-    suspend fun deleteAll() {
+    open suspend fun deleteAll() {
         stockDao.deleteAll()
     }
 
-    fun getStockCount(): Flow<Int> {
+    open fun getStockCount(): Flow<Int> {
         return stockDao.getStockCount()
     }
 
-    fun getStockBySymbol(symbol: String): Flow<List<StockHistory>> {
+    open fun getStockBySymbol(symbol: String): Flow<List<StockHistory>> {
         return stockDao.getStockBySymbol(symbol)
     }
 }

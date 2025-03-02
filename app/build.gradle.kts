@@ -17,10 +17,13 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+//        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Replace com.example.android.dagger with your class path.
+        testInstrumentationRunner = "com.test.demo.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
+
     }
 
     buildTypes {
@@ -92,6 +95,8 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
+    kaptAndroidTest("com.google.dagger:hilt-compiler:2.51.1")
 
     // 首先添加依赖
     implementation("cafe.adriel.voyager:voyager-androidx:1.0.0-rc03") // Voyager ViewModel 插件
@@ -105,6 +110,12 @@ dependencies {
     // Gson dependencies
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Test dependencies
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.0")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
 }
 // Allow references to generated code
