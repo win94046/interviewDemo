@@ -38,13 +38,16 @@ fun StockListScreenPageTestable(testStockList: List<StockHistory>) {
 
 @Composable
 fun StockListScreenContent(stockList: List<StockHistory>, navigator: Navigator) {
+    val stockViewModel: StockViewModel = hiltViewModel() // 使用 Hilt 自動提供 ViewModel
+
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text("股票歷史", style = MaterialTheme.typography.headlineMedium)
         LazyColumn {
             items(stockList) { stock ->
                 StockItem(stock) {
                     Log.i("test", "StockItem clicked: ${stock.symbol}")
-                    navigator.push(StockDetailScreen(stock)) // 正確使用 navigator
+                    stockViewModel.recordStock(stock)
+                    navigator.push(StockDetailScreen()) // 正確使用 navigator
                     Log.i("test", "Current screen after push: ${navigator.lastItem}")
                 }
             }

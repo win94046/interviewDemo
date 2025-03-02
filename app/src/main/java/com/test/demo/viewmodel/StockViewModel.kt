@@ -1,6 +1,7 @@
 package com.test.demo.viewmodel
 
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -27,10 +28,13 @@ class StockViewModel @Inject constructor (private val repository: StockRepositor
     private val _selectedStock = MutableStateFlow<StockHistory?>(null)
     val selectedStock: StateFlow<StockHistory?> = _selectedStock
 
+    val currentStock = mutableStateOf(StockHistory(id = 0, symbol = "", date = "", openPrice = 0.0, closePrice = 0.0, volume = 0, stockHistoryDataListJson = ""))
     init {
         insertDefaultStock() // 在 ViewModel 初始化時插入預設數據
     }
-
+    fun recordStock(stock: StockHistory){
+        currentStock.value = stock
+    }
     private fun insertDefaultStock() {
         viewModelScope.launch {
             repository.getStockCount().collect { count ->

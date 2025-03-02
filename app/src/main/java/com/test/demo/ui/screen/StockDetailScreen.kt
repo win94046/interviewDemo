@@ -28,28 +28,56 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.test.demo.data.StockHistory
 import com.test.demo.data.StockHistoryData
 import com.test.demo.data.StockHistoryDataListJson
+import com.test.demo.viewmodel.StockViewModel
 
-class StockDetailScreen(private val stock: StockHistory) : Screen {
+class StockDetailScreen() : Screen {
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         Log.i("test", "StockDetailScreen Created")
         val navigator = LocalNavigator.currentOrThrow // 取得 Voyager Navigator
         Log.i("test", "Navigator is available in StockDetailScreen")
+        val stockViewModel: StockViewModel = hiltViewModel() // 使用 Hilt 自動提供 ViewModel
+        val stock by stockViewModel.currentStock
         // 解析 JSON 轉換為 List<StockHistoryData>
         val historyDataList = remember(stock.stockHistoryDataListJson) {
             val type = TypeToken.getParameterized(StockHistoryDataListJson::class.java).type
             Gson().fromJson<StockHistoryDataListJson>(stock.stockHistoryDataListJson, type)
         }?.dataList ?: emptyList()
 
+        var showAlertDialog by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if(showAlertDialog){
+                AlertDialog(
+                    onDismissRequest = {  },
+                    modifier = Modifier,
+                    content = {
+                        Button(
+                            onClick = { showAlertDialog = false },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
+                        ) {
+                            Text("CloseAlertDialog", color = Color.White)
+                        }
+                    }
+                )
+            }
+
+            // AlertDialog按鈕
+            Button(
+                onClick = { showAlertDialog = true },
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
+            ) {
+                Text("showAlertDialog", color = Color.White)
+            }
             // 返回按鈕
             Button(
                 onClick = { navigator.pop() },
@@ -142,7 +170,7 @@ fun KLineChart(historyData: List<StockHistoryData>) {
             .fillMaxWidth()
             .height(250.dp) // 調整高度，讓 X 軸標記有空間
             .background(Color.White)
-            .padding(start = 35.dp , top = 8.dp , bottom = 8.dp)
+            .padding(start = 35.dp, top = 8.dp, bottom = 8.dp)
     ) {
         val widthStep = size.width / (sortedData.size - 1).coerceAtLeast(1)
         val heightRange = maxPrice - minPrice

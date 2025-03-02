@@ -38,7 +38,34 @@ class MainActivity : ComponentActivity() {
         setContent {
             Navigator(StockListScreen()) // 設定主畫面
         }
+        Log.i("test", "MainActivity Created")
     }
+
+    override fun onStart() {
+        super.onStart()
+        Log.i("test", "MainActivity onStart")
+    }
+    override fun onStop() {
+        super.onStop()
+        Log.i("test", "MainActivity onStop")
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("test", "MainActivity onDestroy")
+    }
+    override fun onPause() {
+        super.onPause()
+        Log.i("test", "MainActivity onPause")
+    }
+    override fun onResume() {
+        super.onResume()
+        Log.i("test", "MainActivity onResume")
+    }
+    override fun onRestart() {
+        super.onRestart()
+        Log.i("test", "MainActivity onRestart")
+    }
+
 }
 
 @Composable
